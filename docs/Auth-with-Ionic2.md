@@ -268,22 +268,26 @@ import * as firebase from 'firebase/app';
 
 @Injectable()
 export class AuthService {
+  private authState: Observable<firebase.User>;
   private currentUser: firebase.User;
 
   constructor(public afAuth: AngularFireAuth) {
-    afAuth.authState.subscribe((user: firebase.User) => this.currentUser = user);
+    this.authState = afAuth.authState;
+    afAuth.subscribe((user: firebase.User) => {
+      this.currentUser = user;
+    });
   }
 
   get authenticated(): boolean {
     return this.currentUser !== null;
   }
 
-  signInWithFacebook(): firebase.Promise<any> {
+  signInWithFacebook(): firebase.Promise<FirebaseAuthState> {
     return this.afAuth.auth.signInWithPopup(new firebase.auth.FacebookAuthProvider());
   }
 
   signOut(): void {
-    this.afAuth.auth.signOut();
+    this.afAuth.signOut();
   }
 
   displayName(): string {
@@ -474,17 +478,21 @@ import { Facebook } from 'ionic-native';
 
 @Injectable()
 export class AuthService {
+  private authState: Observable<firebase.User>;
   private currentUser: firebase.User;
 
   constructor(public afAuth: AngularFireAuth) {
-    afAuth.authState.subscribe((user: firebase.User) => this.currentUser = user);
+    this.authState = afAuth.authState;
+    afAuth.subscribe((user: firebase.User) => {
+      this.currentUser = user;
+    });
   }
 
   get authenticated(): boolean {
     return this.currentUser !== null;
   }
 
-  signInWithFacebook(): firebase.Promise<any> {
+  signInWithFacebook(): firebase.Promise<FirebaseAuthState> {
     if (this.platform.is('cordova')) {
       return Facebook.login(['email', 'public_profile']).then(res => {
         const facebookCredential = firebase.auth.FacebookAuthProvider.credential(res.authResponse.accessToken);
@@ -497,7 +505,7 @@ export class AuthService {
   }
 
   signOut(): void {
-    this.afAuth.auth.signOut();
+    this.afAuth.signOut();
   }
 
   displayName(): string {
