@@ -2,6 +2,8 @@
 
 > Getting started with AngularFire2 is easy with the [Angular CLI](https://github.com/angular/angular-cli). Follow the 10 steps below to get started. Don't worry, we're always working to make this shorter.
 
+> Using Ionic and the Ionic CLI? Check out these [specific instructions](6-angularfire-and-ionic-cli.md) for Ionic and their CLI.
+
 ### 0. Prerequisites
 
 Before you start installing AngularFire2, make sure you have latest version of angular-cli installed.
@@ -115,7 +117,7 @@ export class AppModule {}
 
 ### 6. Setup individual @NgModules
 
-After adding the AngularFireModule you also need to add modules for the individual @NgModules that your application needs.  
+After adding the AngularFireModule you also need to add modules for the individual @NgModules that your application needs.
  - AngularFireAuthModule
  - AngularFireDatabaseModule
  - AngularFireStorageModule (Future release)
@@ -123,7 +125,7 @@ After adding the AngularFireModule you also need to add modules for the individu
 
 #### Adding the Firebase Database and Auth Modules
 
-For example if you application was using both Firebase authentication and the Firebase database you would add:
+For example if your application was using both Firebase authentication and the Firebase database you would add:
 
 ```ts
 import { BrowserModule } from '@angular/platform-browser';
