@@ -6,7 +6,7 @@
     "module": "es2015",
     "target": "es2015",
     "noImplicitAny": false,
-    "outDir": "../../dist/packages-dist/firestore/es2015",
+    "outDir": "../../dist/packages-dist/database/es2015",
     "rootDir": ".",
     "sourceMap": true,
     "inlineSources": true,
@@ -17,8 +17,7 @@
     "skipLibCheck": true,
     "moduleResolution": "node",
     "paths": {
-      "angularfire2": ["../../dist/packages-dist"],
-      "firestore": ["./node_modules/firestore"]
+      "angularfire2": ["../../dist/packages-dist"]
     }
   },
   "files": [

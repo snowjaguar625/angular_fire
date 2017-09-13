@@ -1,10 +1,10 @@
 {
   "name": "angularfire2",
-  "version": "4.0.0-rc.3",
+  "version": "4.0.0-rc.2",
   "description": "The official library of Firebase and Angular.",
   "private": true,
   "scripts": {
-    "test": "npm run build && karma start --single-run",
+    "test": "karma start --single-run",
     "test:watch": "concurrently \"npm run build:watch\" \"npm run delayed_karma\"",
     "test:debug": "npm run build && karma start",
     "delayed_karma": "sleep 10 && karma start",
@@ -20,7 +20,7 @@
     "type": "git",
     "url": "git+https://github.com/angular/angularfire2.git"
   },
-  "author": "davideast",
+  "author": "jeffbcross,davideast",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/angular/angularfire2/issues"
@@ -33,7 +33,6 @@
     "@angular/platform-browser": "^4.0.0",
     "@angular/platform-browser-dynamic": "^4.0.0",
     "firebase": "^4.0.0",
-    "firestore": "file:firestore-module.tgz",
     "rxjs": "^5.0.1",
     "zone.js": "^0.8.0"
   },
@@ -73,7 +72,7 @@
     "systemjs": "^0.19.16",
     "systemjs-builder": "^0.15.7",
     "traceur": "0.0.96",
-    "typescript": "^2.4.2"
+    "typescript": "^2.3.4"
   },
   "typings": "index.d.ts"
 }
