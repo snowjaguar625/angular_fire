@@ -53,7 +53,8 @@ const GLOBALS = {
   'angularfire2': 'angularfire2',
   'angularfire2/auth': 'angularfire2.auth',
   'angularfire2/database': 'angularfire2.database',
-  'angularfire2/database-deprecated': 'angularfire2.database_deprecated'
+  'angularfire2/database-deprecated': 'angularfire2.database_deprecated',
+  'angularfire2/firestore': 'angularfire2.firestore'
 };
 
 // Map of dependency versions across all packages
@@ -62,7 +63,8 @@ const VERSIONS = {
   FIREBASE_VERSION: pkg.dependencies['firebase'],
   RXJS_VERSION: pkg.dependencies['rxjs'],
   ZONEJS_VERSION: pkg.dependencies['zone.js'],
-  ANGULARFIRE2_VERSION: pkg.version
+  ANGULARFIRE2_VERSION: pkg.version,
+  FIRESTORE_VERSION: pkg.dependencies['firestore']
 };
 
 const MODULE_NAMES = {
@@ -70,6 +72,7 @@ const MODULE_NAMES = {
   auth: 'angularfire2.auth',
   database: 'angularfire2.database',
   "database-deprecated": 'angularfire2.database_deprecated',
+  firestore: 'angularfire2.firestore'
 };
 
 const ENTRIES = {
@@ -77,20 +80,23 @@ const ENTRIES = {
   auth: `${process.cwd()}/dist/packages-dist/auth/index.js`,
   database: `${process.cwd()}/dist/packages-dist/database/index.js`,
   "database-deprecated": `${process.cwd()}/dist/packages-dist/database-deprecated/index.js`,
+  firestore: `${process.cwd()}/dist/packages-dist/firestore/index.js`
 };
 
 const SRC_PKG_PATHS = {
   core: `${process.cwd()}/src/core/package.json`,
   auth: `${process.cwd()}/src/auth/package.json`,
   database: `${process.cwd()}/src/database/package.json`,
-  "database-deprecated": `${process.cwd()}/src/database-deprecated/package.json`
+  "database-deprecated": `${process.cwd()}/src/database-deprecated/package.json`,
+  firestore: `${process.cwd()}/src/firestore/package.json`
 };
 
 const DEST_PKG_PATHS = {
   core: `${process.cwd()}/dist/packages-dist/package.json`,
   auth: `${process.cwd()}/dist/packages-dist/auth/package.json`,
   database: `${process.cwd()}/dist/packages-dist/database/package.json`,
-  "database-deprecated": `${process.cwd()}/dist/packages-dist/database-deprecated/package.json`
+  "database-deprecated": `${process.cwd()}/dist/packages-dist/database-deprecated/package.json`,
+  firestore: `${process.cwd()}/dist/packages-dist/firestore/package.json`
 };
 
 // Constants for running typescript commands
@@ -229,7 +235,7 @@ function getVersions() {
     getDestPackageFile('core'),
     getDestPackageFile('auth'),
     getDestPackageFile('database'),
-    getDestPackageFile('database-deprecated')
+    getDestPackageFile('firestore')
   ];
   return paths
     .map(path => require(path))
@@ -265,12 +271,12 @@ function buildModules(globals) {
   const core$ = buildModule('core', globals);
   const auth$ = buildModule('auth', globals);
   const db$ = buildModule('database', globals);
-  const dbdep$ = buildModule('database-deprecated', globals);
+  const firestore$ = buildModule('firestore', globals);
   return Observable
     .forkJoin(core$, Observable.from(copyRootTest()))
     .switchMapTo(auth$)
     .switchMapTo(db$)
-    .switchMapTo(dbdep$);
+    .switchMapTo(firestore$);
 }
 
 function buildLibrary(globals) {
@@ -284,12 +290,12 @@ function buildLibrary(globals) {
       const coreStats = measure('core');
       const authStats = measure('auth');
       const dbStats = measure('database');
-      const dbdepStats = measure('database-deprecated');
+      const fsStats = measure('firestore');
       console.log(`
       core.umd.js - ${coreStats.size}, ${coreStats.gzip}
       auth.umd.js - ${authStats.size}, ${authStats.gzip}
       database.umd.js - ${dbStats.size}, ${dbStats.gzip}
-      database-deprecated.umd.js - ${dbdepStats.size}, ${dbdepStats.gzip}
+      firestore.umd.js - ${fsStats.size}, ${fsStats.gzip}
       `);
       verifyVersions();
     });

@@ -2,13 +2,13 @@
   "extends": "./tsconfig-esm.json",
   "compilerOptions": {
     "baseUrl": ".",
+    "target": "es2015",
     "paths": {
       "angularfire2": ["../../dist/packages-dist"],
-      "angularfire2/database-deprecated": ["../../dist/packages-dist/database-deprecated"]
+      "angularfire2/firestore": ["../../dist/packages-dist/firestore"]
     }
   },
   "files": [
-    "index.spec.ts",
-    "../../node_modules/zone.js/dist/zone.js.d.ts"
+    "index.spec.ts"
   ]
 }

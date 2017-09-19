@@ -1,53 +1,34 @@
-import { Injectable } from '@angular/core';
-import { database } from 'firebase/app';
+import * as firebase from 'firebase/app';
 import 'firebase/database';
-import { FirebaseApp } from 'angularfire2';
-import { PathReference, DatabaseQuery, DatabaseReference, DatabaseSnapshot, ChildEvent, ListenEvent, SnapshotChange, QueryFn, ListReference, ObjectReference } from './interfaces';
-import { getRef } from './utils';
-import { createListReference } from './list/create-reference';
-import { createObjectReference } from './object/create-reference';
+import { Inject, Injectable } from '@angular/core';
+import { FirebaseAppConfigToken, FirebaseAppConfig, FirebaseApp } from 'angularfire2';
+import { FirebaseListFactory } from './firebase_list_factory';
+import { FirebaseListObservable } from './firebase_list_observable';
+import { FirebaseListFactoryOpts, FirebaseObjectFactoryOpts, PathReference } from './interfaces';
+import { FirebaseObjectFactory } from './firebase_object_factory';
+import { FirebaseObjectObservable } from './firebase_object_observable';
+import * as utils from './utils';
 
 @Injectable()
 export class AngularFireDatabase {
-  database: database.Database;
 
+  /**
+   * Firebase Database instance
+   */
+  database: firebase.database.Database;
+  
   constructor(public app: FirebaseApp) {
     this.database = app.database();
   }
 
-  list<T>(pathOrRef: PathReference, queryFn?: QueryFn): ListReference<T> {
-    const ref = getRef(this.app, pathOrRef);
-    let query: DatabaseQuery = ref;
-    if(queryFn) {
-      query = queryFn(ref);
-    }
-    return createListReference<T>(query);
+  list(pathOrRef: PathReference, opts?:FirebaseListFactoryOpts):FirebaseListObservable<any[]> {
+    const ref = utils.getRef(this.app, pathOrRef);
+    return FirebaseListFactory(ref, opts);
   }
 
-  object<T>(pathOrRef: PathReference): ObjectReference<T>  {
-    const ref = getRef(this.app, pathOrRef);
-    return createObjectReference<T>(ref);    
-  }
-
-  createPushId() {
-    return this.database.ref().push().key;
+  object(pathOrRef: PathReference, opts?:FirebaseObjectFactoryOpts):FirebaseObjectObservable<any> {
+    const ref = utils.getRef(this.app, pathOrRef);
+    return FirebaseObjectFactory(ref, opts);
   }
 
 }
-
-export { 
-  PathReference, 
-  DatabaseQuery, 
-  DatabaseReference, 
-  DatabaseSnapshot, 
-  ChildEvent, 
-  ListenEvent,
-  SnapshotChange, 
-  QueryFn, 
-  ListReference, 
-  ObjectReference,
-  AngularFireAction,
-  Action,
-  SnapshotAction
-} from './interfaces';
- 

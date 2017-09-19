@@ -1,8 +1,8 @@
 {
-  "name": "angularfire2/database-deprecated",
+  "name": "angularfire2/auth",
   "version": "ANGULARFIRE2_VERSION",
-  "description": "The database module",
-  "main": "../bundles/database.umd.js",
+  "description": "The auth module",
+  "main": "../bundles/auth.umd.js",
   "module": "index.js",
   "es2015": "./es2015/index.js",
   "keywords": [
@@ -23,6 +23,7 @@
     "@angular/platform-browser": "ANGULAR_VERSION",
     "@angular/platform-browser-dynamic": "ANGULAR_VERSION",
     "firebase": "FIREBASE_VERSION",
+    "firestore": "FIRESTORE_VERSION",
     "rxjs": "RXJS_VERSION",
     "zone.js": "ZONEJS_VERSION"
   },

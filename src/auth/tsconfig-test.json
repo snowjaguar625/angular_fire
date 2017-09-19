@@ -3,12 +3,10 @@
   "compilerOptions": {
     "baseUrl": ".",
     "paths": {
-      "angularfire2": ["../../dist/packages-dist"],
-      "angularfire2/auth": ["../../dist/packages-dist/auth"]
+      "angularfire2": ["../../dist/packages-dist"]
     }
   },
   "files": [
-    "index.spec.ts",
-    "../../node_modules/zone.js/dist/zone.js.d.ts"
+    "index.spec.ts"
   ]
 }
