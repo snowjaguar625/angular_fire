@@ -1,19 +1,17 @@
 <p align="center">
-  <h1 align="center">AngularFire</h1>
-  <p align="center">The official library for Firebase and Angular</p>
+  <h1 align="center">AngularFire2</h1>
+  <p align="center">The official library for Firebase and Angular 2</p>
 </p>
 
 [![Build Status](https://travis-ci.org/angular/angularfire2.svg?branch=master)](https://travis-ci.org/angular/angularfire2) [![Join the chat at https://gitter.im/angular/angularfire2](https://badges.gitter.im/angular/angularfire2.svg)](https://gitter.im/angular/angularfire2?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 Status: Release candidate
 
-## What is AngularFire?
+## What is AngularFire2?
 
-- **Observable based** - Use the power of RxJS, Angular, and Firebase.
-- **Realtime bindings** - Synchronize data in reatime.
-- **Authentication** - Log users in with a variety of providers and monitor authentication state in realtime.
-- **Offline Data** - Store data offline automatically with AngularFirestore.
-- **ngrx friendly** - Integrate with ngrx using AngularFire's action based APIs.
+- **Observable based** - Use the power of rxjs, Angular 2, and Firebase.
+- **Realtime bindings** - Synchronize database collections as objects or lists.
+- **Authentication** - Monitor authentication state in realtime.
 
 #### Quick links
 [Contributing](CONTRIBUTING.md)
@@ -32,8 +30,7 @@ npm install firebase angularfire2 --save
 
 ```ts
 import { Component } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
-import { Observable } from 'rxjs/Observable';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'project-name-app',
@@ -46,33 +43,23 @@ import { Observable } from 'rxjs/Observable';
   `
 })
 export class MyApp {
-  items: Observable<any[]>;
-  constructor(db: AngularFirestore) {
-    this.items = db.collection('items').valueChanges();
+  items: FirebaseListObservable<any[]>;
+  constructor(db: AngularFireDatabase) {
+    this.items = db.list('/items');
   }
 }
 ```
 
 ## Developer Guide
+If you want to get started quickly on building with AngularFire2, check out our
+5 step developer guide that will teach you everything you need to know to be 
+productive with AngularFire2.
 
-### Getting started
-- [Installation & Setup](docs/1-install-and-setup.md)
-
-### AngularFirestore
-- [Using collections](docs/firestore/collections.md)
-- [Using documents](docs/firestore/documents.md)
-
-### AngularFireAuth
-- [User Authentication](docs/5-user-authentication.md)
-
-### AngularFireDatabase
-- [Retrieving data as objects](docs/2-retrieving-data-as-objects.md)
-- [Retrieving data as lists](docs/3-retrieving-data-as-lists.md)
-- [Querying lists](docs/4-querying-lists.md)
-
-### Ionic
-- [Using AngularFire with Ionic 2](docs/Auth-with-Ionic2.md)
-- [Using AngularFire with Ionic 3 and Angular 4](docs/Auth-with-Ionic3-Angular4.md)
-
-### Deploy to Firebase Hosting
-- [Deploying AngularFire to Firebase Hosting](docs/7-deploying-angularfire-to-firebase.md)
+1. [Installation & Setup](docs/1-install-and-setup.md)
+2. [Retrieving data as objects - FirebaseObjectObservable](docs/2-retrieving-data-as-objects.md)
+3. [Retrieving data as lists - FirebaseListObservable](docs/3-retrieving-data-as-lists.md)
+4. [Querying lists](docs/4-querying-lists.md)
+5. [User Authentication - FirebaseAuthentication](docs/5-user-authentication.md)
+6. [Using AngularFire2 with Ionic 2](docs/Auth-with-Ionic2.md)
+7. [Using AngularFire2 with Ionic 3 and Angular 4](docs/Auth-with-Ionic3-Angular4.md)
+8. [Deploying AngularFire2 to FirebaseHosting](docs/7-deploying-angularfire-to-firebase.md)
