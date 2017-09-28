@@ -1,6 +1,6 @@
-# Using AngularFire with Ionic
+# Using AngularFire2 with Ionic 3-Angular 4
 
-This tutorial provides a walkthrough of integrating ANgularFIre Authentication with Ionic 3 /Angular 4+. 
+This tutorial provides a walkthrough of integrating AngularFire2 Authentication with Ionic3/Angular4. 
 The below setup has been tested on Windows 10, but it should be same for Mac/Linux.
 
 Note: - If you're working with Ionic2 and Angular2.0, then you should refer to **Auth-with-Ionic2** tutorial 
@@ -115,7 +115,7 @@ System:
 ```
 You need to ensure you've got Ionic Framework Version 3, as shown above.
 
-Alternatively you can open `package.json` to ensure you've got the following angualr and Ionic versions
+Alternatively you can open `package.json` to ensure you've got the following Angular and Ionic versions
 
 ```json
 "dependencies": {
@@ -243,7 +243,7 @@ export class AppModule {}
 Now inject AngularFireDatabase in your component. Open your `home.ts` by going into `src/pages/home/home.ts` and make the 
 following changes:
 
->1) Import "AngularFireDatabase" at the top of your component.
+>1) Import "AngularFireDatabase, FirebaseListObservable" at the top of your component.
 
 >2) Inject your AngularFireDatabase dependency in the constructor.
 
@@ -256,18 +256,17 @@ Your `home.ts` file should look like this.
 import { Component } from '@angular/core';
 import { NavController } from 'ionic-angular';
 
-import { AngularFireDatabase } from 'angularfire2/database';
-import { Observable } from 'rxjs/Observable';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'page-home',
   templateUrl: 'home.html'
 })
 export class HomePage {
-  items: Observable<any[]>;
+  items: FirebaseListObservable<any[]>;
 
   constructor(public navCtrl: NavController, afDB: AngularFireDatabase) {
-    this.items = afDB.list('cuisines').valueChanges();
+    this.items = afDB.list('/cuisines');
   }
 
 }
@@ -291,7 +290,7 @@ export class HomePage {
 <ion-content padding>
 	<ion-list>
 		<ion-item class="text" *ngFor="let item of items | async">
-			{{item | json}}
+			{{item.$value}}
 		</ion-item>
 	</ion-list>
 </ion-content>
@@ -345,7 +344,7 @@ The `home.html` should look like below
 <ion-header>
 	<ion-navbar>
 		<ion-title>
-			Auth with Ionic
+			Auth with Ionic 3
 		</ion-title>
 	</ion-navbar>
 </ion-header>
@@ -466,7 +465,7 @@ and `home.html` shouldlook like this
 <ion-header>
 	<ion-navbar>
 		<ion-title>
-			Auth with Ionic
+			Auth with Ionic 3
 		</ion-title>
 	</ion-navbar>
 </ion-header>
