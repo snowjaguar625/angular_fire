@@ -1,35 +1,13 @@
 # 1. Installation and Setup
 
-> Getting started with AngularFire2 is easy with the [Angular CLI](https://github.com/angular/angular-cli). Follow the 10 steps below to get started. Don't worry, we're always working to make this shorter.
-
 > Using Ionic and the Ionic CLI? Check out these [specific instructions](6-angularfire-and-ionic-cli.md) for Ionic and their CLI.
 
 ### 0. Prerequisites
 
-Before you start installing AngularFire2, make sure you have latest version of angular-cli installed.
-To verify run the command `ng -v` and ensure you see `angular-cli: 1.x.x-beta.xx`. The lowest compatible version is `1.x.x-beta.14`.
-
-If not, you may need to do the following:
+AngularFire provides multiple module formats for different types of builds. The guide is based off the Angular CLI. It is possible to do a manual setup with Webpack or a SystemJS build as well.
 
 ```bash
-# if you have the wrong cli version only
-npm uninstall -g angular-cli
-npm uninstall -g @angular/cli
-npm cache clean
-
-# reinstall clean version
-npm install -g @angular/cli@latest
-```
-
-You need the Angular CLI, typings, and TypeScript.
-
-```bash
-npm install -g @angular/cli@latest
-# or install locally
-npm install @angular/cli --save-dev
-# make sure you have typings installed
-npm install -g typings
-npm install -g typescript
+npm install @angular/cli
 ```
 
 ### 1. Create a new project
@@ -50,13 +28,13 @@ open http://localhost:4200
 
 You should see a message that says *App works!*
 
-### 3. Install AngularFire 2 and Firebase
+### 3. Install AngularFire and Firebase
 
 ```bash
 npm install angularfire2 firebase --save
 ```
 
-Now that you have a new project setup, install AngularFire2 and Firebase from npm.
+Now that you have a new project setup, install AngularFire and Firebase from npm.
 
 ### 4. Add Firebase config to environments variable
 
@@ -79,6 +57,7 @@ export const environment = {
 ### 5. Setup @NgModule for the AngularFireModule
 
 Open `/src/app/app.module.ts`, inject the Firebase providers, and specify your Firebase configuration.
+
 This can be found in your project at [the Firebase Console](https://console.firebase.google.com):
 
 ```ts
@@ -118,7 +97,6 @@ export class AppModule {}
 ### 6. Setup individual @NgModules
 
 After adding the AngularFireModule you also need to add modules for the individual @NgModules that your application needs.
- - AngularFirestoreModule
  - AngularFireAuthModule
  - AngularFireDatabaseModule
  - AngularFireStorageModule (Future release)
@@ -133,7 +111,7 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule } from '@angular/core';
 import { AppComponent } from './app.component';
 import { AngularFireModule } from 'angularfire2';
-import { AngularFirestoreModule } from 'angularfire2/firestore';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { AngularFireAuthModule } from 'angularfire2/auth';
 import { environment } from '../environments/environment';
 
@@ -141,7 +119,7 @@ import { environment } from '../environments/environment';
   imports: [
     BrowserModule,
     AngularFireModule.initializeApp(environment.firebase, 'my-app-name'), // imports firebase/app needed for everything
-    AngularFirestoreModule, // imports firebase/firestore, only needed for database features
+    AngularFireDatabaseModule, // imports firebase/database, only needed for database features
     AngularFireAuthModule, // imports firebase/auth, only needed for auth features
   ],
   declarations: [ AppComponent ],
@@ -151,13 +129,13 @@ export class AppModule {}
 
 ```
 
-### 7. Inject AngularFirestore
+### 7. Inject AngularFireDatabase
 
 Open `/src/app/app.component.ts`, and make sure to modify/delete any tests to get the sample working (tests are still important, you know):
 
 ```ts
 import { Component } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFireDatabase, FirebaseListObservable } from 'angularfire2/database';
 
 @Component({
   selector: 'app-root',
@@ -165,7 +143,7 @@ import { AngularFirestore } from 'angularfire2/firestore';
   styleUrls: ['app.component.css']
 })
 export class AppComponent {
-  constructor(db: AngularFirestore) {
+  constructor(db: AngularFireDatabase) {
 
   }
 }
@@ -178,7 +156,7 @@ In `/src/app/app.component.ts`:
 
 ```ts
 import { Component } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -188,8 +166,8 @@ import { Observable } from 'rxjs/Observable';
 })
 export class AppComponent {
   items: Observable<any[]>;
-  constructor(db: AngularFirestore) {
-    this.items = db.collection('items').valueChanges();
+  constructor(db: AngularFireDatabase) {
+    this.items = db.list('items').valueChanges();
   }
 }
 ```
@@ -199,7 +177,7 @@ Open `/src/app/app.component.html`:
 ```html
 <ul>
   <li class="text" *ngFor="let item of items | async">
-    {{item.name}}
+    {{ item | json }}
   </li>
 </ul>
 ```
@@ -214,4 +192,5 @@ Run the serve command and go to `localhost:4200` in your browser.
 
 And that's it! If it's totally *borked*, file an issue and let us know.
 
-### [Next Step: Understanding collections in Firestore](firestore/collections.md)
+### [Next Step: Retrieving data as objects](2-retrieving-data-as-objects.md)
+

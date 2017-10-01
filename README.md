@@ -12,7 +12,6 @@ Status: Release candidate
 - **Observable based** - Use the power of RxJS, Angular, and Firebase.
 - **Realtime bindings** - Synchronize data in reatime.
 - **Authentication** - Log users in with a variety of providers and monitor authentication state in realtime.
-- **Offline Data** - Store data offline automatically with AngularFirestore.
 - **ngrx friendly** - Integrate with ngrx using AngularFire's action based APIs.
 
 #### Quick links
@@ -20,7 +19,7 @@ Status: Release candidate
 
 [Stackblitz Template](https://stackblitz.com/edit/angular-2ed5zx?) - Remember to set your Firebase configuration in `app/app.module.ts`.
 
-[Upgrading to v4.0? Check out our guide.](docs/version-4-upgrade.md)
+[Upgrading to v5.0? Check out our guide.](docs/version-5-upgrade.md)
 
 ## Install
 
@@ -32,7 +31,7 @@ npm install firebase angularfire2 --save
 
 ```ts
 import { Component } from '@angular/core';
-import { AngularFirestore } from 'angularfire2/firestore';
+import { AngularFireDatabase } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 
 @Component({
@@ -47,8 +46,8 @@ import { Observable } from 'rxjs/Observable';
 })
 export class MyApp {
   items: Observable<any[]>;
-  constructor(db: AngularFirestore) {
-    this.items = db.collection('items').valueChanges();
+  constructor(db: AngularFireDatabase) {
+    this.items = db.list('items').valueChanges();
   }
 }
 ```
@@ -58,21 +57,17 @@ export class MyApp {
 ### Getting started
 - [Installation & Setup](docs/1-install-and-setup.md)
 
-### AngularFirestore
-- [Using collections](docs/firestore/collections.md)
-- [Using documents](docs/firestore/documents.md)
-
-### AngularFireAuth
-- [User Authentication](docs/5-user-authentication.md)
-
 ### AngularFireDatabase
 - [Retrieving data as objects](docs/2-retrieving-data-as-objects.md)
 - [Retrieving data as lists](docs/3-retrieving-data-as-lists.md)
 - [Querying lists](docs/4-querying-lists.md)
 
-### Ionic
-- [Using AngularFire with Ionic 2](docs/Auth-with-Ionic2.md)
-- [Using AngularFire with Ionic 3 and Angular 4](docs/Auth-with-Ionic3-Angular4.md)
+### AngularFireAuth
+- [User Authentication](docs/5-user-authentication.md)
 
 ### Deploy to Firebase Hosting
 - [Deploying AngularFire to Firebase Hosting](docs/7-deploying-angularfire-to-firebase.md)
+
+### Ionic
+- [Using AngularFire with Ionic 2](docs/Auth-with-Ionic2.md)
+- [Using AngularFire with Ionic 3 and Angular 4](docs/Auth-with-Ionic3-Angular4.md)

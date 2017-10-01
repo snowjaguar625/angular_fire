@@ -11,23 +11,22 @@ export class FirebaseApp implements firebase.app.App {
   database: () => firebase.database.Database;
   messaging: () => firebase.messaging.Messaging;
   storage: () => firebase.storage.Storage;
-  delete: () => Promise<any>;
-  firestore: () => firebase.firestore.Firestore;
+  delete: () => firebase.Promise<any>;
 }
 
 export function _firebaseAppFactory(config: FirebaseAppConfig, appName?: string): FirebaseApp {
   try {
     if (appName) {
-      return firebase.initializeApp(config, appName) as FirebaseApp;
+      return firebase.initializeApp(config, appName);
     } else {
-      return firebase.initializeApp(config) as FirebaseApp;
+      return firebase.initializeApp(config);
     }
   }
   catch (e) {
     if (e.code === "app/duplicate-app") {
-      return firebase.app(e.name) as FirebaseApp;
+      return firebase.app(e.name);
     }
 
-    return firebase.app(null!) as FirebaseApp;
+    return firebase.app(null!);
   }
 }
