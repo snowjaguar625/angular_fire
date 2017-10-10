@@ -41,14 +41,11 @@ constructor(afDb: AngularFireDatabase) {
 ### 5.0
 ```ts
 constructor(afDb: AngularFireDatabase) {
-  afDb.list('items').snapshotChanges().map(action => {
-    const arr = [];
-    action.forEach(e => {
-      const $key = e.key;
-      arr.push({ $key, ...e.payload.val() });
-    });
-    return arr;
-  }).subscribe(items => items.forEach(item => console.log(item.$key)));
+  afDb.object('items').snapshotChanges().map(action => {
+    const $key = action.payload.key;
+    const data = { $key, ...action.payload.val() };
+    return data;
+  }).subscribe(item => console.log(item.$key));
 }
 ```
 
