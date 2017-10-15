@@ -1,5 +1,5 @@
 import { DatabaseQuery, AngularFireList, ChildEvent } from '../interfaces';
-import { snapshotChanges } from './snapshot-changes';
+import { createLoadedChanges, loadedSnapshotChanges } from './loaded';
 import { createStateChanges } from './state-changes';
 import { createAuditTrail } from './audit-trail';
 import { createDataOperationMethod } from './data-operation';
@@ -12,14 +12,12 @@ export function createListReference<T>(query: DatabaseQuery): AngularFireList<T>
     set: createDataOperationMethod<T>(query.ref, 'set'),
     push: (data: T) => query.ref.push(data),
     remove: createRemoveMethod(query.ref),
-    snapshotChanges(events?: ChildEvent[]) {
-      return snapshotChanges(query, events);
-    },
+    snapshotChanges: createLoadedChanges(query),
     stateChanges: createStateChanges(query),
     auditTrail: createAuditTrail(query),
     valueChanges<T>(events?: ChildEvent[]) { 
-      return snapshotChanges(query, events)
-        .map(actions => actions.map(a => a.payload.val())); 
+      return loadedSnapshotChanges(query, events)
+        .map(actions => actions.map(a => a.payload!.val())); 
     }
   }
 }

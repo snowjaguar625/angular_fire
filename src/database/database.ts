@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { database } from 'firebase/app';
 import 'firebase/database';
 import { FirebaseApp } from 'angularfire2';
-import { PathReference, DatabaseQuery, DatabaseReference, DatabaseSnapshot, ChildEvent, ListenEvent, QueryFn, AngularFireList, AngularFireObject } from './interfaces';
+import { PathReference, DatabaseQuery, DatabaseReference, DatabaseSnapshot, ChildEvent, ListenEvent, SnapshotChange, QueryFn, AngularFireList, AngularFireObject } from './interfaces';
 import { getRef } from './utils';
 import { createListReference } from './list/create-reference';
 import { createObjectReference } from './object/create-reference';
@@ -41,7 +41,8 @@ export {
   DatabaseReference, 
   DatabaseSnapshot, 
   ChildEvent, 
-  ListenEvent, 
+  ListenEvent,
+  SnapshotChange, 
   QueryFn, 
   AngularFireList, 
   AngularFireObject,

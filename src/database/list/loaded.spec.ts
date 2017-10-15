@@ -1,6 +1,6 @@
 import * as firebase from 'firebase/app';
 import { FirebaseApp, FirebaseAppConfig, AngularFireModule } from 'angularfire2';
-import { AngularFireDatabase, AngularFireDatabaseModule, auditTrail, ChildEvent } from 'angularfire2/database';
+import { AngularFireDatabase, AngularFireDatabaseModule, createLoadedChanges } from 'angularfire2/database';
 import { TestBed, inject } from '@angular/core/testing';
 import { COMMON_CONFIG } from '../test-config';
 import 'rxjs/add/operator/skip';
@@ -9,7 +9,7 @@ import 'rxjs/add/operator/skip';
 const rando = () => (Math.random() + 1).toString(36).substring(7);
 const FIREBASE_APP_NAME = rando();
 
-describe('stateChanges', () => {
+describe('createLoadedChanges', () => {
   let app: FirebaseApp;
   let db: AngularFireDatabase;
   let createRef: (path: string) => firebase.database.Reference;
@@ -32,8 +32,8 @@ describe('stateChanges', () => {
     inject([FirebaseApp, AngularFireDatabase], (app_: FirebaseApp, _db: AngularFireDatabase) => {
       app = app_;
       db = _db;
-      app.database().goOffline();
-      createRef = (path: string) => { app.database().goOffline(); return app.database().ref(path); };
+      app.database().goOnline();
+      createRef = (path: string) => { app.database().goOnline(); return app.database().ref(path); };
     })();
   });
 
@@ -41,26 +41,14 @@ describe('stateChanges', () => {
     app.delete().then(done, done.fail);
   });
 
-  function prepareAuditTrail(opts: { events?: ChildEvent[], skip: number } = { skip: 0 }) {
-    const { events, skip } = opts;
-    const aref = createRef(rando());
-    aref.set(batch);
-    const changes = auditTrail(aref, events);
-    return {
-      changes: changes.skip(skip),
-      ref: aref 
-    };
-  }
-
-  it('should listen to all events by default', (done) => {
-
-    const { changes } = prepareAuditTrail();
-    changes.subscribe(actions => {
+  it('should not emit until the array is whole', (done) => {
+    const ref = createRef(rando());
+    ref.set(batch);
+    createLoadedChanges(ref)().subscribe(actions => {
       const data = actions.map(a => a.payload!.val());
       expect(data).toEqual(items);
       done();
     });
-
   });
 
 });
