@@ -1,5 +1,4 @@
-import { Subscription, Scheduler } from 'rxjs';
-import { PathReference, DatabaseReference, FirebaseOperation, FirebaseOperationCases } from './interfaces';
+import { DatabaseReference, FirebaseOperation, FirebaseOperationCases, PathReference } from './interfaces';
 import { database } from 'firebase/app';
 
 export function isString(value: any): boolean {
@@ -30,7 +29,7 @@ export function getRef(database: database.Database, pathRef: PathReference): Dat
     : database.ref(pathRef as string);
 }
 
-export function checkOperationCases(item: FirebaseOperation, cases: FirebaseOperationCases) : Promise<void> {
+export function checkOperationCases(item: FirebaseOperation, cases: FirebaseOperationCases): Promise<void> {
   if (isString(item)) {
     return cases.stringCase();
   } else if (isFirebaseRef(item)) {

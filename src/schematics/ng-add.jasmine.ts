@@ -1,5 +1,5 @@
-import {Tree} from '@angular-devkit/schematics';
-import {setupProject} from './ng-add';
+import { Tree } from '@angular-devkit/schematics';
+import { setupProject } from './ng-add';
 
 const PROJECT_NAME = 'pie-ka-chu';
 const PROJECT_ROOT = 'pirojok';
@@ -204,7 +204,7 @@ describe('ng-add', () => {
         })
       ).toThrowError(/ already defined in .firebaserc/);
     });
-  
+
     it('Should throw if firebase.json is broken', async () => {
       const tree = Tree.empty();
       tree.create('angular.json', JSON.stringify(generateAngularJson()));

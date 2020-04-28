@@ -1,10 +1,10 @@
-import { InjectionToken, NgZone, PLATFORM_ID, Injectable, Inject, Optional } from '@angular/core';
-import { Observable, of, from } from 'rxjs';
-import { Settings, PersistenceSettings, CollectionReference, DocumentReference, QueryFn, Query, QueryGroupFn, AssociatedReference } from './interfaces';
+import { Inject, Injectable, InjectionToken, NgZone, Optional, PLATFORM_ID } from '@angular/core';
+import { from, Observable, of } from 'rxjs';
+import { AssociatedReference, CollectionReference, DocumentReference, PersistenceSettings, Query, QueryFn, QueryGroupFn, Settings } from './interfaces';
 import { AngularFirestoreDocument } from './document/document';
 import { AngularFirestoreCollection } from './collection/collection';
 import { AngularFirestoreCollectionGroup } from './collection-group/collection-group';
-import { FirebaseOptions, FirebaseAppConfig, FIREBASE_OPTIONS, FIREBASE_APP_NAME, ɵfirebaseAppFactory, ɵAngularFireSchedulers, ɵkeepUnstableUntilFirstFactory } from '@angular/fire';
+import { FIREBASE_APP_NAME, FIREBASE_OPTIONS, FirebaseAppConfig, FirebaseOptions, ɵAngularFireSchedulers, ɵfirebaseAppFactory, ɵkeepUnstableUntilFirstFactory } from '@angular/fire';
 import { isPlatformServer } from '@angular/common';
 import { firestore } from 'firebase/app';
 import firebase from '@firebase/app';
@@ -107,8 +107,8 @@ export class AngularFirestore {
    * @param app
    */
   constructor(
-    @Inject(FIREBASE_OPTIONS) options:FirebaseOptions,
-    @Optional() @Inject(FIREBASE_APP_NAME) nameOrConfig:string|FirebaseAppConfig|null|undefined,
+    @Inject(FIREBASE_OPTIONS) options: FirebaseOptions,
+    @Optional() @Inject(FIREBASE_APP_NAME) nameOrConfig: string|FirebaseAppConfig|null|undefined,
     @Optional() @Inject(ENABLE_PERSISTENCE) shouldEnablePersistence: boolean|null,
     @Optional() @Inject(SETTINGS) settings: Settings|null,
     @Inject(PLATFORM_ID) platformId: Object,
@@ -123,9 +123,9 @@ export class AngularFirestore {
       // INVESTIGATE this seems to be required because in the browser build registerFirestore is an Object?
       //             seems like we're fighting ngcc. In the server firestore() isn't available, so I have to register
       //             in the browser registerFirestore is not a function... maybe this is an underlying firebase-js-sdk issue
-      if (registerFirestore) { registerFirestore(firebase) }
+      if (registerFirestore) { registerFirestore(firebase); }
       const firestore = app.firestore();
-      if (settings) { firestore.settings(settings) }
+      if (settings) { firestore.settings(settings); }
       return firestore;
     });
 
@@ -135,7 +135,7 @@ export class AngularFirestore {
       const enablePersistence = () => {
         try {
           return from(this.firestore.enablePersistence(persistenceSettings || undefined).then(() => true, () => false));
-        } catch(e) {
+        } catch (e) {
           return of(false);
         }
       };
@@ -152,8 +152,8 @@ export class AngularFirestore {
    * @param pathOrRef
    * @param queryFn
    */
-  collection<T>(path: string, queryFn?: QueryFn): AngularFirestoreCollection<T>
-  collection<T>(ref: CollectionReference, queryFn?: QueryFn): AngularFirestoreCollection<T>
+  collection<T>(path: string, queryFn?: QueryFn): AngularFirestoreCollection<T>;
+  collection<T>(ref: CollectionReference, queryFn?: QueryFn): AngularFirestoreCollection<T>;
   collection<T>(pathOrRef: string | CollectionReference, queryFn?: QueryFn): AngularFirestoreCollection<T> {
     let collectionRef: CollectionReference;
     if (typeof pathOrRef === 'string') {
@@ -185,8 +185,8 @@ export class AngularFirestore {
    * Collection reference and can be queried.
    * @param pathOrRef
    */
-  doc<T>(path: string): AngularFirestoreDocument<T>
-  doc<T>(ref: DocumentReference): AngularFirestoreDocument<T>
+  doc<T>(path: string): AngularFirestoreDocument<T>;
+  doc<T>(ref: DocumentReference): AngularFirestoreDocument<T>;
   doc<T>(pathOrRef: string | DocumentReference): AngularFirestoreDocument<T> {
     let ref: DocumentReference;
     if (typeof pathOrRef === 'string') {
@@ -201,6 +201,6 @@ export class AngularFirestore {
    * Returns a generated Firestore Document Id.
    */
   createId() {
-    return this.firestore.collection('_').doc().id
+    return this.firestore.collection('_').doc().id;
   }
 }

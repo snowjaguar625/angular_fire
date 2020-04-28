@@ -1,9 +1,9 @@
 import { map } from 'rxjs/operators';
-import { DatabaseQuery, AngularFireObject } from '../interfaces';
+import { AngularFireObject, DatabaseQuery } from '../interfaces';
 import { createObjectSnapshotChanges } from './snapshot-changes';
 import { AngularFireDatabase } from '../database';
 
-export function createObjectReference<T=any>(query: DatabaseQuery, afDatabase: AngularFireDatabase): AngularFireObject<T> {
+export function createObjectReference<T= any>(query: DatabaseQuery, afDatabase: AngularFireDatabase): AngularFireObject<T> {
   return {
     query,
     snapshotChanges<T>() {
@@ -19,7 +19,7 @@ export function createObjectReference<T=any>(query: DatabaseQuery, afDatabase: A
       return snapshotChanges$.pipe(
         afDatabase.keepUnstableUntilFirst,
         map(action => action.payload.exists() ? action.payload.val() as T : null)
-      )
+      );
     },
-  }
+  };
 }

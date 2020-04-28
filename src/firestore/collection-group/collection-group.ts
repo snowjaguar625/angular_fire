@@ -1,9 +1,9 @@
-import { Observable, from } from 'rxjs';
+import { from, Observable } from 'rxjs';
 import { fromCollectionRef } from '../observable/fromRef';
-import { map, filter, scan, observeOn } from 'rxjs/operators';
+import { filter, map, observeOn, scan } from 'rxjs/operators';
 import { firestore } from 'firebase/app';
 
-import { DocumentChangeType, Query, DocumentData, DocumentChangeAction } from '../interfaces';
+import { DocumentChangeAction, DocumentChangeType, DocumentData, Query } from '../interfaces';
 import { validateEventsArray } from '../collection/collection';
 import { docChanges, sortedChanges } from '../collection/changes';
 import { AngularFirestore } from '../firestore';
@@ -26,7 +26,7 @@ import { AngularFirestore } from '../firestore';
  * // Subscribe to changes as snapshots. This provides you data updates as well as delta updates.
  * fakeStock.valueChanges().subscribe(value => console.log(value));
  */
-export class AngularFirestoreCollectionGroup<T=DocumentData> {
+export class AngularFirestoreCollectionGroup<T= DocumentData> {
   /**
    * The constructor takes in a CollectionGroupQuery to provide wrapper methods
    * for data operations and data streaming.
@@ -44,7 +44,7 @@ export class AngularFirestoreCollectionGroup<T=DocumentData> {
    * @param events
    */
   stateChanges(events?: DocumentChangeType[]): Observable<DocumentChangeAction<T>[]> {
-    if(!events || events.length === 0) {
+    if (!events || events.length === 0) {
       return docChanges<T>(this.query, this.afs.schedulers.outsideAngular).pipe(
         this.afs.keepUnstableUntilFirst
       );
