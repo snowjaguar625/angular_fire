@@ -46,12 +46,12 @@ be fixed in the latest versions. -->
 
 ### How to reproduce these conditions
 
-**Failing test unit, Stackblitz demonstrating the problem**
+**Failing test unit, Plunkr, or JSFiddle demonstrating the problem**
 
 <!-- 
 Provide a failing test unit, or create a minimal, complete, and 
-verifiable example (http://stackoverflow.com/help/mcve) using 
-StackBlitz (https://stackblitz.com/edit/angular-fire-start).
+verifiable example (http://stackoverflow.com/help/mcve) using either 
+Plunker (http://plnkr.co/) or JSFiddle (https://jsfiddle.net/).
 -->
 
 **Steps to set up and reproduce**
