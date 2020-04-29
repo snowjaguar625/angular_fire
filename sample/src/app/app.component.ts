@@ -1,4 +1,4 @@
-import { ApplicationRef, Component } from '@angular/core';
+import { Component, ApplicationRef } from '@angular/core';
 import { FirebaseApp } from '@angular/fire';
 
 @Component({

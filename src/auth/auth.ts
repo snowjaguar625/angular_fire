@@ -1,20 +1,10 @@
-import { Inject, Injectable, NgZone, Optional, PLATFORM_ID } from '@angular/core';
-import { from, Observable, of } from 'rxjs';
-import { map, observeOn, shareReplay, switchMap } from 'rxjs/operators';
-import {
-  FIREBASE_APP_NAME,
-  FIREBASE_OPTIONS,
-  FirebaseAppConfig,
-  FirebaseOptions,
-  ɵAngularFireSchedulers,
-  ɵfirebaseAppFactory,
-  ɵkeepUnstableUntilFirstFactory,
-  ɵlazySDKProxy,
-  ɵPromiseProxy
-} from '@angular/fire';
-import { auth, User } from 'firebase/app';
+import { Injectable, Inject, Optional, NgZone, PLATFORM_ID } from '@angular/core';
+import { Observable, of, from } from 'rxjs';
+import { switchMap, map, observeOn, shareReplay } from 'rxjs/operators';
+import { FIREBASE_OPTIONS, FIREBASE_APP_NAME, FirebaseOptions, FirebaseAppConfig, ɵPromiseProxy, ɵlazySDKProxy, ɵfirebaseAppFactory, ɵAngularFireSchedulers, ɵkeepUnstableUntilFirstFactory } from '@angular/fire';
+import { User, auth } from 'firebase/app';
 
-export interface AngularFireAuth extends ɵPromiseProxy<auth.Auth> {}
+export interface AngularFireAuth extends ɵPromiseProxy<auth.Auth> {};
 
 @Injectable({
   providedIn: 'any'
@@ -44,9 +34,8 @@ export class AngularFireAuth {
   public readonly idTokenResult: Observable<auth.IdTokenResult|null>;
 
   constructor(
-    @Inject(FIREBASE_OPTIONS) options: FirebaseOptions,
-    @Optional() @Inject(FIREBASE_APP_NAME) nameOrConfig: string|FirebaseAppConfig|null|undefined,
-    // tslint:disable-next-line:ban-types
+    @Inject(FIREBASE_OPTIONS) options:FirebaseOptions,
+    @Optional() @Inject(FIREBASE_APP_NAME) nameOrConfig:string|FirebaseAppConfig|null|undefined,
     @Inject(PLATFORM_ID) platformId: Object,
     zone: NgZone
   ) {

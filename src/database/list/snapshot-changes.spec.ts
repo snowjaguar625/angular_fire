@@ -1,10 +1,10 @@
 import { database } from 'firebase/app';
-import { AngularFireModule, FirebaseApp } from '@angular/fire';
-import { AngularFireDatabase, AngularFireDatabaseModule, ChildEvent, snapshotChanges, URL } from '../public_api';
-import { TestBed } from '@angular/core/testing';
+import { FirebaseApp, AngularFireModule } from '@angular/fire';
+import { AngularFireDatabase, AngularFireDatabaseModule, snapshotChanges, ChildEvent, URL } from '../public_api';
+import { TestBed, inject } from '@angular/core/testing';
 import { COMMON_CONFIG } from '../../test-config';
 import { BehaviorSubject } from 'rxjs';
-import { skip, switchMap, take } from 'rxjs/operators';
+import { skip, take, switchMap } from 'rxjs/operators';
 import 'firebase/database';
 import { rando } from '../../firestore/utils.spec';
 
@@ -13,9 +13,10 @@ describe('snapshotChanges', () => {
   let db: AngularFireDatabase;
   let createRef: (path: string) => database.Reference;
   let batch = {};
-  const items = [{ name: 'zero' }, { name: 'one' }, { name: 'two' }].map((item, i) => ({ key: i.toString(), ...item }));
-  Object.keys(items).forEach((key, i) => {
-    batch[i] = items[key];
+  const items = [{ name: 'zero' }, { name: 'one' }, { name: 'two' }].map((item, i) => ( { key: i.toString(), ...item } ));
+  Object.keys(items).forEach(function (key, i) {
+    const itemValue = items[key];
+    batch[i] = itemValue;
   });
   // make batch immutable to preserve integrity
   batch = Object.freeze(batch);
@@ -30,10 +31,11 @@ describe('snapshotChanges', () => {
         { provide: URL, useValue: 'http://localhost:9000' }
       ]
     });
-
-    app = TestBed.inject(FirebaseApp);
-    db = TestBed.inject(AngularFireDatabase);
-    createRef = (path: string) => db.database.ref(path);
+    inject([FirebaseApp, AngularFireDatabase], (app_: FirebaseApp, _db: AngularFireDatabase) => {
+      app = app_;
+      db = _db;
+      createRef = (path: string) => db.database.ref(path);;
+    })();
   });
 
   afterEach(() => {
@@ -53,7 +55,7 @@ describe('snapshotChanges', () => {
   it('should listen to all events by default', (done) => {
     const { snapChanges, ref } = prepareSnapshotChanges();
     snapChanges.pipe(take(1)).subscribe(actions => {
-      const data = actions.map(a => a.payload.val());
+      const data = actions.map(a => a.payload!.val());
       expect(data).toEqual(items);
     }).add(done);
     ref.set(batch);
@@ -61,10 +63,9 @@ describe('snapshotChanges', () => {
 
   it('should handle multiple subscriptions (hot)', (done) => {
     const { snapChanges, ref } = prepareSnapshotChanges();
-    const sub = snapChanges.subscribe(() => {
-    }).add(done);
+    const sub = snapChanges.subscribe(() => {}).add(done);
     snapChanges.pipe(take(1)).subscribe(actions => {
-      const data = actions.map(a => a.payload.val());
+      const data = actions.map(a => a.payload!.val());
       expect(data).toEqual(items);
     }).add(sub);
     ref.set(batch);
@@ -72,20 +73,19 @@ describe('snapshotChanges', () => {
 
   it('should handle multiple subscriptions (warm)', done => {
     const { snapChanges, ref } = prepareSnapshotChanges();
-    snapChanges.pipe(take(1)).subscribe(() => {
-    }).add(() => {
+    snapChanges.pipe(take(1)).subscribe(() => {}).add(() => {
       snapChanges.pipe(take(1)).subscribe(actions => {
-        const data = actions.map(a => a.payload.val());
+        const data = actions.map(a => a.payload!.val());
         expect(data).toEqual(items);
       }).add(done);
     });
     ref.set(batch);
   });
 
-  it('should listen to only child_added events', (done) => {
+ it('should listen to only child_added events', (done) => {
     const { snapChanges, ref } = prepareSnapshotChanges({ events: ['child_added'], skipnumber: 0 });
     snapChanges.pipe(take(1)).subscribe(actions => {
-      const data = actions.map(a => a.payload.val());
+      const data = actions.map(a => a.payload!.val());
       expect(data).toEqual(items);
     }).add(done);
     ref.set(batch);
@@ -118,22 +118,24 @@ describe('snapshotChanges', () => {
   });
 
   it('should handle dynamic queries that return empty sets', done => {
+    const ITEMS = 10;
     let count = 0;
-    const namefilter$ = new BehaviorSubject<number | null>(null);
+    let firstIndex = 0;
+    let namefilter$ = new BehaviorSubject<number|null>(null);
     const aref = createRef(rando());
     aref.set(batch);
     namefilter$.pipe(switchMap(name => {
-      const filteredRef = name ? aref.child('name').equalTo(name) : aref;
+      const filteredRef = name ? aref.child('name').equalTo(name) : aref
       return snapshotChanges(filteredRef);
-    }), take(2)).subscribe(data => {
+    }),take(2)).subscribe(data => {
       count = count + 1;
       // the first time should all be 'added'
-      if (count === 1) {
+      if(count === 1) {
         expect(Object.keys(data).length).toEqual(3);
         namefilter$.next(-1);
       }
       // on the second round, we should have filtered out everything
-      if (count === 2) {
+      if(count === 2) {
         expect(Object.keys(data).length).toEqual(0);
       }
     }).add(done);

@@ -1,8 +1,12 @@
-import { BuilderContext, BuilderOutput, createBuilder } from '@angular-devkit/architect';
+import {
+  BuilderContext,
+  BuilderOutput,
+  createBuilder
+} from '@angular-devkit/architect';
 import { NodeJsSyncHost } from '@angular-devkit/core/node';
 import deploy from './actions';
-import { experimental, json, normalize } from '@angular-devkit/core';
-import { BuildTarget, DeployBuilderSchema } from '../interfaces';
+import { experimental, normalize, json } from '@angular-devkit/core';
+import {BuildTarget, DeployBuilderSchema} from '../interfaces';
 import { getFirebaseProjectName } from '../utils';
 
 type DeployBuilderOptions = DeployBuilderSchema & json.JsonObject;

@@ -1,7 +1,7 @@
 import { DatabaseReference } from '../interfaces';
-import { AngularFireModule, FirebaseApp } from '@angular/fire';
+import { FirebaseApp, AngularFireModule } from '@angular/fire';
 import { AngularFireDatabase, AngularFireDatabaseModule, auditTrail, ChildEvent, URL } from '../public_api';
-import { TestBed } from '@angular/core/testing';
+import { TestBed, inject } from '@angular/core/testing';
 import { COMMON_CONFIG } from '../../test-config';
 import { skip } from 'rxjs/operators';
 import 'firebase/database';
@@ -12,9 +12,10 @@ describe('auditTrail', () => {
   let db: AngularFireDatabase;
   let createRef: (path: string) => DatabaseReference;
   let batch = {};
-  const items = [{ name: 'zero' }, { name: 'one' }, { name: 'two' }].map((item, i) => ({ key: i.toString(), ...item }));
-  Object.keys(items).forEach((key, i) => {
-    batch[i] = items[key];
+  const items = [{ name: 'zero' }, { name: 'one' }, { name: 'two' }].map((item, i) => ( { key: i.toString(), ...item } ));
+  Object.keys(items).forEach(function (key, i) {
+    const itemValue = items[key];
+    batch[i] = itemValue;
   });
   // make batch immutable to preserve integrity
   batch = Object.freeze(batch);
@@ -29,10 +30,11 @@ describe('auditTrail', () => {
         { provide: URL, useValue: 'http://localhost:9000' }
       ]
     });
-
-    app = TestBed.inject(FirebaseApp);
-    db = TestBed.inject(AngularFireDatabase);
-    createRef = (path: string) => db.database.ref(path);
+    inject([FirebaseApp, AngularFireDatabase], (app_: FirebaseApp, _db: AngularFireDatabase) => {
+      app = app_;
+      db = _db;
+      createRef = (path: string) => db.database.ref(path);
+    })();
   });
 
   afterEach(() => {

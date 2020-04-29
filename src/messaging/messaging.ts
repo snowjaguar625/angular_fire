@@ -1,21 +1,12 @@
-import { Inject, Injectable, NgZone, Optional, PLATFORM_ID } from '@angular/core';
+import { Injectable, Inject, Optional, NgZone, PLATFORM_ID } from '@angular/core';
 import { messaging } from 'firebase/app';
-import { concat, EMPTY, Observable, of, throwError } from 'rxjs';
-import { catchError, defaultIfEmpty, map, mergeMap, observeOn, switchMap } from 'rxjs/operators';
-import {
-  FIREBASE_APP_NAME,
-  FIREBASE_OPTIONS,
-  FirebaseAppConfig,
-  FirebaseOptions,
-  ɵAngularFireSchedulers,
-  ɵfirebaseAppFactory,
-  ɵlazySDKProxy,
-  ɵPromiseProxy
-} from '@angular/fire';
+import { Observable, empty, of, throwError } from 'rxjs';
+import { mergeMap, catchError, map, switchMap, concat, observeOn, defaultIfEmpty } from 'rxjs/operators';
+import { FirebaseOptions, FirebaseAppConfig, ɵAngularFireSchedulers, FIREBASE_APP_NAME, FIREBASE_OPTIONS, ɵlazySDKProxy, ɵPromiseProxy } from '@angular/fire';
+import { ɵfirebaseAppFactory } from '@angular/fire';
 import { isPlatformServer } from '@angular/common';
 
-export interface AngularFireMessaging extends Omit<ɵPromiseProxy<messaging.Messaging>, 'deleteToken' | 'getToken' | 'requestPermission'> {
-}
+export interface AngularFireMessaging extends Omit<ɵPromiseProxy<messaging.Messaging>, 'deleteToken'|'getToken'|'requestPermission'> {};
 
 @Injectable({
   providedIn: 'any'
@@ -23,16 +14,15 @@ export interface AngularFireMessaging extends Omit<ɵPromiseProxy<messaging.Mess
 export class AngularFireMessaging {
 
   public readonly requestPermission: Observable<void>;
-  public readonly getToken: Observable<string | null>;
-  public readonly tokenChanges: Observable<string | null>;
+  public readonly getToken: Observable<string|null>;
+  public readonly tokenChanges: Observable<string|null>;
   public readonly messages: Observable<{}>;
-  public readonly requestToken: Observable<string | null>;
+  public readonly requestToken: Observable<string|null>;
   public readonly deleteToken: (token: string) => Observable<boolean>;
 
   constructor(
-    @Inject(FIREBASE_OPTIONS) options: FirebaseOptions,
-    @Optional() @Inject(FIREBASE_APP_NAME) nameOrConfig: string | FirebaseAppConfig | null | undefined,
-    // tslint:disable-next-line:ban-types
+    @Inject(FIREBASE_OPTIONS) options:FirebaseOptions,
+    @Optional() @Inject(FIREBASE_APP_NAME) nameOrConfig:string|FirebaseAppConfig|null|undefined,
     @Inject(PLATFORM_ID) platformId: Object,
     zone: NgZone
   ) {
@@ -40,7 +30,7 @@ export class AngularFireMessaging {
 
     const messaging = of(undefined).pipe(
       observeOn(schedulers.outsideAngular),
-      switchMap(() => isPlatformServer(platformId) ? EMPTY : import('firebase/messaging')),
+      switchMap(() => isPlatformServer(platformId) ? empty() : import('firebase/messaging')),
       map(() => ɵfirebaseAppFactory(options, zone, nameOrConfig)),
       map(app => app.messaging())
     );
@@ -49,21 +39,20 @@ export class AngularFireMessaging {
 
       this.requestPermission = messaging.pipe(
         observeOn(schedulers.outsideAngular),
-        // tslint:disable-next-line
-        switchMap(messaging => messaging.requestPermission())
+        switchMap(messaging => messaging.requestPermission()),
       );
-
+    
     } else {
-
+    
       this.requestPermission = throwError('Not available on server platform.');
-
+    
     }
 
     this.getToken = messaging.pipe(
       observeOn(schedulers.outsideAngular),
       switchMap(messaging => messaging.getToken()),
       defaultIfEmpty(null)
-    );
+    )
 
     const tokenChanges = messaging.pipe(
       observeOn(schedulers.outsideAngular),
@@ -72,12 +61,10 @@ export class AngularFireMessaging {
       ))
     );
 
-    this.tokenChanges = concat(
-      messaging.pipe(
-        observeOn(schedulers.outsideAngular),
-        switchMap(messaging => messaging.getToken())
-      ),
-      tokenChanges
+    this.tokenChanges = messaging.pipe(
+      observeOn(schedulers.outsideAngular),
+      switchMap(messaging => messaging.getToken()),
+      concat(tokenChanges)
     );
 
     this.messages = messaging.pipe(

@@ -1,5 +1,5 @@
 import { NgModule, Optional } from '@angular/core';
-import { ScreenTrackingService, UserTrackingService } from './analytics.service';
+import { UserTrackingService, ScreenTrackingService } from './analytics.service';
 import { AngularFireAnalytics } from './analytics';
 
 @NgModule({
@@ -12,7 +12,6 @@ export class AngularFireAnalyticsModule {
     @Optional() userTracking: UserTrackingService
   ) {
     // calling anything on analytics will eagerly load the SDK
-    // tslint:disable-next-line:no-unused-expression
     analytics.app;
   }
 }

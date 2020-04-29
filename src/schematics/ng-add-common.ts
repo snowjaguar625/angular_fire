@@ -76,7 +76,6 @@ export function generateFirebaseRc(
 
 export function safeReadJSON(path: string, tree: Tree) {
   try {
-    // tslint:disable-next-line:no-non-null-assertion
     return JSON.parse(tree.read(path)!.toString());
   } catch (e) {
     throw new SchematicsException(`Error when parsing ${path}: ${e.message}`);

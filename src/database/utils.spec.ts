@@ -1,3 +1,4 @@
+import { TestBed, inject } from '@angular/core/testing';
 import * as utils from './utils';
 
 describe('utils', () => {
@@ -11,12 +12,11 @@ describe('utils', () => {
       const nul = null;
       const obj = {};
       const fn = () => { };
-      const undef = undefined;
+      let undef;
       expect(utils.isString(str)).toBe(true);
       expect(utils.isString(notStr)).toBe(false);
       expect(utils.isString(bool)).toBe(false);
       expect(utils.isString(nul)).toBe(false);
-      expect(utils.isString(obj)).toBe(false);
       expect(utils.isString(fn)).toBe(false);
       expect(utils.isString(undef)).toBe(false);
     });
